@@ -1,0 +1,50 @@
+import numpy as np
+import random
+
+np.random.seed(42)#helps us to repeat the same random value
+marks = np.random.randint(0, 101, (50, 5))
+
+# Class stats
+class_avg = marks.mean()
+highest = marks.max()
+lowest = marks.min()
+
+# Subject analysis
+subject_avg = marks.mean(axis=0)
+best_subject = np.argmax(subject_avg)
+
+# Student analysis
+total = marks.sum(axis=1)
+topper_id = np.argmax(total)
+
+# Filtering
+above80 = (marks > 80).all(axis=1)
+count_above80 = np.sum(above80)
+
+fail_any = (marks < 35).any(axis=1)
+count_fail = np.sum(fail_any)
+
+# Grading
+percentage = (total / 500) * 100
+
+grades = np.select(
+    [percentage >= 85, percentage >= 70, percentage >= 50],
+    ['A', 'B', 'C'],
+    default='D'
+)
+
+# Grade distribution
+unique, counts = np.unique(grades, return_counts=True)
+
+print("\n========= FINAL REPORT =========")
+print("Class Average:", round(class_avg, 2))
+print("Topper Student ID:", topper_id)
+print("Topper Marks:", marks[topper_id])
+print("Best Subject Index:", best_subject)
+print("Students >80 in all subjects:", count_above80)
+print("Students failing in any subject:", count_fail)
+
+print("\nGrade Distribution:")
+for i, j in zip(unique, counts):
+    print("GRADE:",str(i),"COUNT:",str(j))
+print("================================")
